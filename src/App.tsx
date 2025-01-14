@@ -11,6 +11,7 @@ import {
   defaultConfig,
   defaultServices,
 } from './config/rtvi.config';
+import { useWidgetContext } from "@/contexts/WidgetContext";
 
 const LoadingScreen = () => (
   <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
@@ -29,6 +30,8 @@ const LoadingScreen = () => (
 function App() {
   const [voiceClient, setVoiceClient] = useState<DailyVoiceClient | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
+  const { agent_id, schema } = useWidgetContext();
+  console.log(agent_id)
 
   useEffect(() => {
     let mounted = true;
@@ -44,6 +47,10 @@ function App() {
           config: defaultConfig,
           timeout: BOT_READY_TIMEOUT,
           enableCam: true,
+          customBodyParams: {
+            agent_code: agent_id,
+            schema_name: schema,
+          }
           // mediaConstraints: {
           //   video: {
           //     width: { ideal: 1280 },
