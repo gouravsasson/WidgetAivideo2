@@ -11,7 +11,7 @@ import {
   defaultConfig,
   defaultServices,
 } from './config/rtvi.config';
-import { useWidgetContext } from "@/contexts/WidgetContext";
+import { useWidgetContext } from "./constexts/WidgetContext";
 
 const LoadingScreen = () => (
   <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
