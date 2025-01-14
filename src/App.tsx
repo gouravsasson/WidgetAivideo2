@@ -44,14 +44,14 @@ function App() {
           config: defaultConfig,
           timeout: BOT_READY_TIMEOUT,
           enableCam: true,
-          mediaConstraints: {
-            video: {
-              width: { ideal: 1280 },
-              height: { ideal: 720 },
-              facingMode: "user"
-            },
-            audio: true
-          }
+          // mediaConstraints: {
+          //   video: {
+          //     width: { ideal: 1280 },
+          //     height: { ideal: 720 },
+          //     facingMode: "user"
+          //   },
+          //   audio: true
+          // }
         });
 
         const llmHelper = new LLMHelper({

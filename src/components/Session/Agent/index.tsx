@@ -2,24 +2,30 @@ import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { Loader2 } from "lucide-react";
 import { VoiceEvent } from "realtime-ai";
-import { useVoiceClient, useVoiceClientEvent, useVoiceClientMediaTrack } from "realtime-ai-react";
+import { 
+  // useVoiceClient
+  useVoiceClientEvent, useVoiceClientMediaTrack } from "realtime-ai-react";
 
 import ModelBadge from "./model";
 import WaveForm from "./waveform";
 
 import styles from "./styles.module.css";
+import StatsAggregator from "@/utils/stats_aggregator";
 
 export const Agent: React.FC<{
   isReady: boolean;
   statsAggregator: StatsAggregator;
 }> = memo(
-  ({ isReady, statsAggregator }) => {
-    const voiceClient = useVoiceClient()!;
+  ({ isReady, 
+    // statsAggregator 
+  }) => {
+    // const voiceClient = useVoiceClient()!;
     const videoRef = useRef<HTMLVideoElement>(null);
     const [hasStarted, setHasStarted] = useState<boolean>(false);
     const [botStatus, setBotStatus] = useState<
       "initializing" | "connected" | "disconnected"
     >("initializing");
+    console.log(botStatus)
     const [botIsTalking, setBotIsTalking] = useState<boolean>(false);
     const [hasVideo, setHasVideo] = useState(false);
 

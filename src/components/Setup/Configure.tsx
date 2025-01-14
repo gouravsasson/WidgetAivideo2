@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useVoiceClient } from "realtime-ai-react";
-import { LANGUAGES } from '@/config/rtvi.config';
+// import { LANGUAGES } from '@/config/rtvi.config';
 
 import HelpTip from "../ui/helptip";
 import { Label } from "../ui/label";
 import { Switch } from "../ui/switch";
-import { Select } from "../ui/select";
+// import { Select } from "../ui/select";
 import DeviceSelect from "./DeviceSelect";
 
 interface ConfigureProps {
@@ -18,8 +18,10 @@ interface ConfigureProps {
 export const Configure: React.FC<ConfigureProps> = React.memo(
   ({ startAudioOff, handleStartAudioOff, inSession = false }) => {
     const [showPrompt, setshowPrompt] = useState<boolean>(false);
+    console.log(setshowPrompt)
     const modalRef = useRef<HTMLDialogElement>(null);
     const voiceClient = useVoiceClient();
+    console.log(voiceClient)
 
     useEffect(() => {
       const current = modalRef.current;

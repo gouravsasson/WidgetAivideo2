@@ -39,7 +39,7 @@ const VoiceAgent: React.FC<VoiceAgentProps> = ({ active, muted, handleMute }) =>
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-
+  
     // Create particles
     const particles = Array.from({ length: 15 }, (_, i) => {
       const particle = document.createElement('div');
@@ -50,10 +50,10 @@ const VoiceAgent: React.FC<VoiceAgentProps> = ({ active, muted, handleMute }) =>
       particle.style.setProperty('--i', i.toString());
       return particle;
     });
-
+  
     const particlesContainer = container.querySelector(`.${styles.particles}`);
     particles.forEach(p => particlesContainer?.appendChild(p));
-
+  
     // Audio visualization
     if (track) {
       const audioContext = new AudioContext();
@@ -61,7 +61,7 @@ const VoiceAgent: React.FC<VoiceAgentProps> = ({ active, muted, handleMute }) =>
       const analyser = audioContext.createAnalyser();
       analyser.fftSize = 32;
       source.connect(analyser);
-
+  
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
       const waves = Array.from({ length: 3 }, (_, i) => {
         const wave = document.createElement('div');
@@ -69,15 +69,15 @@ const VoiceAgent: React.FC<VoiceAgentProps> = ({ active, muted, handleMute }) =>
         wave.style.transform = `rotateX(${60 + i * 30}deg)`;
         return wave;
       });
-
+  
       const waveform = container.querySelector(`.${styles.waveform}`);
       waves.forEach(w => waveform?.appendChild(w));
-
+  
       const updateWaves = () => {
         analyser.getByteFrequencyData(dataArray);
         const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
         const scale = 1 + (average / 255) * 0.3;
-
+  
         waves.forEach((wave, i) => {
           wave.style.transform = `
             rotateX(${60 + i * 30}deg) 
@@ -86,14 +86,21 @@ const VoiceAgent: React.FC<VoiceAgentProps> = ({ active, muted, handleMute }) =>
           wave.style.borderWidth = `${2 + (average / 255) * 3}px`;
           wave.style.borderTopColor = `rgba(255, 255, 255, ${0.2 + (average / 255) * 0.4})`;
         });
-
+  
         requestAnimationFrame(updateWaves);
       };
-
+  
       updateWaves();
-      return () => audioContext.close();
+  
+      // Cleanup function
+      return () => {
+        source.disconnect(); // Disconnect source from analyser
+        analyser.disconnect(); // Disconnect analyser from context
+        audioContext.close().catch(console.error); // Close the audio context
+      };
     }
   }, [track]);
+  
 
   const renderIcon = () => {
     if (!active) return <Loader2 className="animate-spin" />;

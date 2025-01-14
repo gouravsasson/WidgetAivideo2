@@ -11,6 +11,7 @@ import { Button } from "../../ui/button";
 import HelpTip from "../../ui/helptip";
 
 import styles from "./styles.module.css";
+import StatsAggregator from "@/utils/stats_aggregator";
 
 interface StatsProps {
   statsAggregator: StatsAggregator;
