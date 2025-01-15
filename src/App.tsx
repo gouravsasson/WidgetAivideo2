@@ -32,6 +32,11 @@ function App() {
   const [isInitializing, setIsInitializing] = useState(true);
   const { agent_id, schema } = useWidgetContext();
   console.log(agent_id)
+  const [userTranscript, setUserTranscript] = useState<string | null>(null);
+  const [botTranscript, setBotTranscript] = useState<string | null>(null);
+   
+    console.log(userTranscript);
+    console.log("botTranscript",botTranscript);
 
   useEffect(() => {
     let mounted = true;
@@ -40,7 +45,7 @@ function App() {
       try {
         setIsInitializing(true);
 
-        // Create new voice client instance with explicit video enabled
+        
         const newVoiceClient = new DailyVoiceClient({
           baseUrl: "https://app.snowie.ai/api/daily-bots/voice-openai/connect",
           services: defaultServices,
@@ -51,6 +56,10 @@ function App() {
             agent_code: agent_id,
             schema_name: schema,
           }
+          // customBodyParams: {
+          //   agent_code: "88bf0c32-5054-42d9-8c04-0ab793f191e7",
+          //   schema_name: "5362a575-edb7-4c1e-b267-c0230d7badc0",
+          // }
           // mediaConstraints: {
           //   video: {
           //     width: { ideal: 1280 },
@@ -71,6 +80,33 @@ function App() {
         });
 
         newVoiceClient.registerHelper("llm", llmHelper);
+
+        newVoiceClient.on("botTranscript", (text) => {
+          console.log("Bot Transcript:", text);
+          setBotTranscript(text);
+        });
+
+        newVoiceClient.on("userTranscript", (transcript) => {
+          console.log("User Transcript:", transcript);
+          setUserTranscript(transcript.text);
+        });
+
+        
+        // newVoiceClient.on("transcript", (data) => {
+        //   if (data) {
+        //     const { text, speaker, final } = data;
+  
+        //     if (speaker === "user") {
+        //       setUserTranscript(text);
+        //     } else if (speaker === "bot") {
+        //       setBotTranscript(text);
+        //     }
+  
+        //     console.log(`TRANSCRIPT: Speaker: ${speaker}, Final: ${final}, Text: ${text}`);
+        //   } else {
+        //     console.warn("TRANSCRIPT event received null or undefined data");
+        //   }
+        // });
 
         if (mounted) {
           setVoiceClient(newVoiceClient);

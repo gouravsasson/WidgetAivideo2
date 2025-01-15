@@ -11,7 +11,8 @@ import { Alert } from "./ui/alert";
 import { Button } from "./ui/button";
 import * as Card from "./ui/card";
 import Session from "./Session";
-import { Configure } from "./Setup";
+// import { Configure } from "./Setup";
+import { LineChart, LogOut, Settings } from "lucide-react";
 
 const status_text = {
   idle: "Initializing...",
@@ -97,25 +98,23 @@ export default function AppContent() {
     );
   }
 
-  if (appState === "connected") {
-    return (
-      <Session
-        state={transportState}
-        onLeave={() => leave()}
-        startAudioOff={startAudioOff}
-      />
-    );
-  }
+  // if (appState === "connected") {
+  //   return (
+  //     <Session
+  //       state={transportState}
+  //       onLeave={() => leave()}
+  //       startAudioOff={startAudioOff}
+  //     />
+  //   );
+  // }
 
   const isReady = appState === "ready";
 
   return (
-    <Card.Card shadow style={{ boxShadow: 'var(--shadow)', animation: 'appear 1s', maxWidth: '34rem', marginBottom: '3.5rem' }}>
-  <Card.CardHeader>
-    <Card.CardTitle>Configuration</Card.CardTitle>
-  </Card.CardHeader>
-  <Card.CardContent stack>
-    <div
+    <Card.Card className=" bg-none">
+  
+  <Card.CardContent >
+    {/* <div
       style={{
         display: 'flex',
         flexDirection: 'row',
@@ -142,9 +141,14 @@ export default function AppContent() {
       startAudioOff={startAudioOff}
       handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
       state={appState}
-    />
+    /> */}
+     <Session
+        state={transportState}
+        onLeave={() => leave()}
+        startAudioOff={startAudioOff}
+      />
   </Card.CardContent>
-  <Card.CardFooter>
+  <Card.CardFooter className=" flex gap-5">
     <Button
       key="start"
       fullWidthMobile
@@ -172,6 +176,14 @@ export default function AppContent() {
       )}
       {status_text[transportState as keyof typeof status_text]}
     </Button>
+    <Button 
+            variant="ghost"
+            onClick={() => leave()}
+            className=" hover:text-white"
+          >
+            <LogOut size={16} />
+            <span className="ml-2">End</span>
+          </Button>
   </Card.CardFooter>
 </Card.Card>
 

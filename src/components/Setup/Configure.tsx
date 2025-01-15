@@ -18,10 +18,10 @@ interface ConfigureProps {
 export const Configure: React.FC<ConfigureProps> = React.memo(
   ({ startAudioOff, handleStartAudioOff, inSession = false }) => {
     const [showPrompt, setshowPrompt] = useState<boolean>(false);
-    console.log(setshowPrompt)
+    // console.log(setshowPrompt)
     const modalRef = useRef<HTMLDialogElement>(null);
     const voiceClient = useVoiceClient();
-    console.log(voiceClient)
+    // console.log(voiceClient)
 
     useEffect(() => {
       const current = modalRef.current;

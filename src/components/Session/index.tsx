@@ -114,8 +114,8 @@ export const Session = React.memo(
           />
         </div>
 
-        <div className="fixed bottom-4 right-4 flex gap-2 p-3 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10">
-          <Tooltip>
+        {/* <div className="fixed bottom-4 right-4 flex gap-2 p-3 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10"> */}
+          {/* <Tooltip>
             <TooltipContent>Show bot statistics panel</TooltipContent>
             <TooltipTrigger asChild>
               <Button
@@ -126,9 +126,9 @@ export const Session = React.memo(
                 <LineChart className="text-white/80" />
               </Button>
             </TooltipTrigger>
-          </Tooltip>
+          </Tooltip> */}
           
-          <Tooltip>
+          {/* <Tooltip>
             <TooltipContent>Configure</TooltipContent>
             <TooltipTrigger asChild>
               <Button
@@ -139,9 +139,9 @@ export const Session = React.memo(
                 <Settings className="text-white/80" />
               </Button>
             </TooltipTrigger>
-          </Tooltip>
+          </Tooltip> */}
 
-          <div className="w-px h-6 bg-white/10 mx-2" />
+          {/* <div className="w-px h-6 bg-white/10 mx-2" />
           
           <Button 
             variant="ghost"
@@ -150,8 +150,8 @@ export const Session = React.memo(
           >
             <LogOut size={16} />
             <span className="ml-2">End</span>
-          </Button>
-        </div>
+          </Button> */}
+        {/* </div> */}
       </>
     );
   }
