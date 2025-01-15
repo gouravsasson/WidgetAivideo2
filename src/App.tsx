@@ -42,7 +42,7 @@ function App() {
 
         // Create new voice client instance with explicit video enabled
         const newVoiceClient = new DailyVoiceClient({
-          baseUrl: import.meta.env.VITE_BASE_URL || "/api",
+          baseUrl: "https://app.snowie.ai/api/daily-bots/voice-openai/connect",
           services: defaultServices,
           config: defaultConfig,
           timeout: BOT_READY_TIMEOUT,

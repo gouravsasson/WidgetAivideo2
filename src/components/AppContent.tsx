@@ -110,32 +110,70 @@ export default function AppContent() {
   const isReady = appState === "ready";
 
   return (
-    <Card.Card shadow className="animate-appear max-w-lg mb-14">
-      <Card.CardHeader>
-        <Card.CardTitle>Configuration</Card.CardTitle>
-      </Card.CardHeader>
-      <Card.CardContent stack>
-        <div className="flex flex-row gap-2 bg-primary-50 px-4 py-2 md:p-2 text-sm items-center justify-center rounded-md font-medium text-pretty">
-          <Loader2 className="size-7 md:size-5 text-primary-400" />
-          Works best in a quiet environment with a good internet.
-        </div>
-        <Configure
-          startAudioOff={startAudioOff}
-          handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
-          state={appState}
+    <Card.Card shadow style={{ boxShadow: 'var(--shadow)', animation: 'appear 1s', maxWidth: '34rem', marginBottom: '3.5rem' }}>
+  <Card.CardHeader>
+    <Card.CardTitle>Configuration</Card.CardTitle>
+  </Card.CardHeader>
+  <Card.CardContent stack>
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        gap: '0.5rem',
+        backgroundColor: 'var(--primary-50)',
+        padding: '0.5rem 1rem',
+        fontSize: '0.875rem',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: '0.375rem',
+        fontWeight: '500',
+        color: 'var(--pretty)',
+      }}
+    >
+      <Loader2
+        style={{
+          fontSize: '1.75rem',
+          color: 'var(--primary-400)',
+        }}
+      />
+      Works best in a quiet environment with a good internet.
+    </div>
+    <Configure
+      startAudioOff={startAudioOff}
+      handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
+      state={appState}
+    />
+  </Card.CardContent>
+  <Card.CardFooter>
+    <Button
+      key="start"
+      fullWidthMobile
+      onClick={() => start()}
+      disabled={!isReady}
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        ...(isReady
+          ? {}
+          : {
+              cursor: 'not-allowed',
+              opacity: 0.5,
+            }),
+      }}
+    >
+      {!isReady && (
+        <Loader2
+          style={{
+            animation: 'spin 1s linear infinite',
+          }}
         />
-      </Card.CardContent>
-      <Card.CardFooter>
-        <Button
-          key="start"
-          fullWidthMobile
-          onClick={() => start()}
-          disabled={!isReady}
-        >
-          {!isReady && <Loader2 className="animate-spin" />}
-          {status_text[transportState as keyof typeof status_text]}
-        </Button>
-      </Card.CardFooter>
-    </Card.Card>
+      )}
+      {status_text[transportState as keyof typeof status_text]}
+    </Button>
+  </Card.CardFooter>
+</Card.Card>
+
   );
 }
