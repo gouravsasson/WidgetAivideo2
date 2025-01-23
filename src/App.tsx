@@ -11,7 +11,7 @@ import {
   defaultConfig,
   defaultServices,
 } from './config/rtvi.config';
-// import { useWidgetContext } from "./constexts/WidgetContext";
+import { useWidgetContext } from "./constexts/WidgetContext";
 import useSessionStore from "./store/session";
 import useBooleanStore from "./store/update";
 import axios from "axios";
