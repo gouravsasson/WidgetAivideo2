@@ -3,6 +3,7 @@ import React, { createContext, useContext } from 'react';
 type WidgetContextType = {
   agent_id: string;
   schema: string;
+  access_token: string;
 };
 
 const WidgetContext = createContext<WidgetContextType | undefined>(undefined);
@@ -19,15 +20,17 @@ type WidgetProviderProps = {
   children: React.ReactNode;
   agent_id: string;
   schema: string;
+  access_token: string; // Added access_token to props
 };
 
 export const WidgetProvider: React.FC<WidgetProviderProps> = ({
   children,
   agent_id,
   schema,
+  access_token, // Destructure access_token
 }) => {
   return (
-    <WidgetContext.Provider value={{ agent_id, schema }}>
+    <WidgetContext.Provider value={{ agent_id, schema, access_token }}>
       {children}
     </WidgetContext.Provider>
   );

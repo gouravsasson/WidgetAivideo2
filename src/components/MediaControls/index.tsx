@@ -112,7 +112,7 @@ const MediaControls: React.FC<MediaControlsProps> = ({ active, muted, handleMute
   };
 
   return (
-    <div className={styles.container}>
+    <div className="h-[318px] w-[318px]">
       <div className={`${styles.mediaWrapper} ${isUserSpeaking ? styles.speaking : ''}`}>
         <video 
           ref={videoRef} 

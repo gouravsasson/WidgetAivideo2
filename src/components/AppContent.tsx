@@ -9,10 +9,14 @@ import { Loader2 } from "lucide-react";
 
 import { Alert } from "./ui/alert";
 import { Button } from "./ui/button";
-import * as Card from "./ui/card";
+
 import Session from "./Session";
 // import { Configure } from "./Setup";
 import { LineChart, LogOut, Settings } from "lucide-react";
+import useSessionStore from "@/store/session";
+import useBooleanStore from "@/store/update";
+import axios from "axios";
+import { useWidgetContext } from "./../constexts/WidgetContext";
 
 const status_text = {
   idle: "Initializing...",
@@ -31,6 +35,11 @@ export default function AppContent() {
   >("idle");
   const [error, setError] = useState<string | null>(null);
   const [startAudioOff, setStartAudioOff] = useState<boolean>(false);
+  const [isEnding, setIsEnding] = useState(false);
+  const setSessionId = useSessionStore((state) => state.setSessionId);
+  const sessionId = useSessionStore((state) => state.sessionId);
+  const { value, setValue } = useBooleanStore();
+  const { agent_id, schema ,access_token } = useWidgetContext();
 
   useVoiceClientEvent(
     VoiceEvent.Error,
@@ -44,7 +53,7 @@ export default function AppContent() {
   useEffect(() => {
     // Initialize local audio devices
     if (!voiceClient || appState !== "idle") return;
-    
+
     const initDevices = async () => {
       try {
         await voiceClient.initDevices();
@@ -87,7 +96,34 @@ export default function AppContent() {
   }
 
   async function leave() {
-    await voiceClient.disconnect();
+    if (!sessionId) {
+      console.error("Cannot end session: Missing session ID");
+      return;
+    }
+    setSessionId(null);
+
+    try {
+      await axios.post(
+        `https://app.snowie.ai/api/end_call_session/`,
+        {
+          call_session_id: sessionId,
+          transcription: "Sample transcription data",
+          summary: "Sample session summary",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "schema-name": schema,
+          },
+        }
+      );
+
+      setSessionId(null);
+      await voiceClient.disconnect();
+    } catch (error) {
+      console.error("Failed to end session:", error);
+    }
+    setValue(!value);
   }
 
   if (error) {
@@ -108,84 +144,55 @@ export default function AppContent() {
   //   );
   // }
 
+  const handleEndSession = async () => {
+    if (isEnding) return;
+    setIsEnding(true);
+
+    try {
+      leave();
+    } catch (error) {
+      console.error("Failed to end session:", error);
+    } finally {
+      setIsEnding(false);
+    }
+  };
+
   const isReady = appState === "ready";
 
   return (
-    <Card.Card className=" bg-none">
-  
-  <Card.CardContent >
-    {/* <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        gap: '0.5rem',
-        backgroundColor: 'var(--primary-50)',
-        padding: '0.5rem 1rem',
-        fontSize: '0.875rem',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: '0.375rem',
-        fontWeight: '500',
-        color: 'var(--pretty)',
-      }}
-    >
-      <Loader2
-        style={{
-          fontSize: '1.75rem',
-          color: 'var(--primary-400)',
-        }}
-      />
-      Works best in a quiet environment with a good internet.
-    </div>
-    <Configure
-      startAudioOff={startAudioOff}
-      handleStartAudioOff={() => setStartAudioOff(!startAudioOff)}
-      state={appState}
-    /> */}
-     <Session
-        state={transportState}
-        onLeave={() => leave()}
-        startAudioOff={startAudioOff}
-      />
-  </Card.CardContent>
-  <Card.CardFooter className=" flex gap-5">
-    <Button
-      key="start"
-      fullWidthMobile
-      onClick={() => start()}
-      disabled={!isReady}
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '100%',
-        ...(isReady
-          ? {}
-          : {
-              cursor: 'not-allowed',
-              opacity: 0.5,
-            }),
-      }}
-    >
-      {!isReady && (
-        <Loader2
-          style={{
-            animation: 'spin 1s linear infinite',
-          }}
-        />
-      )}
-      {status_text[transportState as keyof typeof status_text]}
-    </Button>
-    <Button 
-            variant="ghost"
-            onClick={() => leave()}
-            className=" hover:text-white"
-          >
-            <LogOut size={16} />
-            <span className="ml-2">End</span>
-          </Button>
-  </Card.CardFooter>
-</Card.Card>
-
+    <>
+      <div className=" p-10 bg-none w-fit">
+        <div>
+          <Session
+            state={transportState}
+            onLeave={() => leave()}
+            startAudioOff={startAudioOff}
+          />
+        </div>
+        <div className="w-[318px] flex gap-5 justify-center mt-4">
+          {appState === "connected" ? (
+            <Button
+              className="w-full flexitems-center justify-center gap-2"
+              onClick={handleEndSession}
+              // disabled={state === "error"} // Disable button if there's an error
+            >
+              {/* {state === "error" && <Loader2 className="animate-spin" />} */}
+              <LogOut size={16} />
+              <span className="">End Session</span>
+            </Button>
+          ) : (
+            <Button
+              className=" flex items-center justify-center gap-2 w-full"
+              onClick={start}
+              // disabled={!isReady}
+            >
+              {/* {!isReady && <Loader2 className="animate-spin" />} */}
+              {status_text[transportState as keyof typeof status_text]}
+            </Button>
+          )}
+        </div>
+        
+      </div>
+    </>
   );
 }

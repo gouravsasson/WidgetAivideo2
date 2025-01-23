@@ -11,19 +11,21 @@ import {
   defaultConfig,
   defaultServices,
 } from './config/rtvi.config';
-import { useWidgetContext } from "./constexts/WidgetContext";
+// import { useWidgetContext } from "./constexts/WidgetContext";
+import useSessionStore from "./store/session";
+import useBooleanStore from "./store/update";
 import axios from "axios";
 
 const LoadingScreen = () => (
-  <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+  <div className="min-h-screen w-full flex flex-col items-center justify-center bg-none">
     <div className="text-center space-y-4">
-      <Loader2 className="h-12 w-12 animate-spin text-blue-600 mx-auto" />
-      <h2 className="text-xl font-medium text-gray-700">
+      <Loader2 className="h-12 w-12 animate-spin text-black mx-auto" />
+      {/* <h2 className="text-xl font-medium text-gray-700">
         Initializing AI Teacher...
       </h2>
       <p className="text-sm text-gray-500">
         Setting up your interactive learning experience
-      </p>
+      </p> */}
     </div>
   </div>
 );
@@ -35,7 +37,7 @@ interface UserDetails {
 function App() {
   const [voiceClient, setVoiceClient] = useState<DailyVoiceClient | null>(null);
   const [isInitializing, setIsInitializing] = useState(true);
-  const { agent_id, schema } = useWidgetContext();
+  const { agent_id, schema ,access_token } = useWidgetContext();
   console.log(agent_id)
   const [userTranscript, setUserTranscript] = useState<string | null>(null);
   const [botTranscript, setBotTranscript] = useState<string | null>(null);
@@ -45,7 +47,7 @@ function App() {
   const voiceClientRef = useRef<VoiceClient | null>(null);
   
   // const baseurl = `${window.location.protocol}//${window.location.hostname}`;
-  const baseurl = `https://https://2xjx88w4-7777.inc1.devtunnels.ms/`;
+  const baseurl = `https://app.snowie.ai`;
   const [hasMediaPermissions, setHasMediaPermissions] = useState(false);
   const [isVoiceAgent, setIsVoiceAgent] = useState(false);
   const [id, Setid] = useState(null);
@@ -56,6 +58,10 @@ function App() {
   const [agentPhone, setAgentPhone] = useState<string>("");
   const [isAgentDataLoaded, setIsAgentDataLoaded] = useState(false);
   const [apiKey, setApiKey] = useState<string>("");
+  // const agent_id ="30ca808f-ea9f-4928-89b3-eed4feeb6c0a"
+  // const schema ="6af30ad4-a50c-4acc-8996-d5f562b6987f"
+  // const sessionId ="100"
+  const token = access_token
    
     console.log(userTranscript);
     console.log("botTranscript",botTranscript);
@@ -118,7 +124,7 @@ function App() {
           data,
           {
             headers: {
-              // Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
               "schema-name": schema,
             },
           }
@@ -136,7 +142,7 @@ function App() {
             `${baseurl}/api/get-agent/${agent_id}/`,
             {
               headers: {
-                // Authorization: `Bearer ${token}`,
+                 Authorization: `Bearer ${token}`,
                 "schema-name": schema,
               },
             }
@@ -159,7 +165,7 @@ function App() {
         checkAgentType();
       }
     }, [agent_id,
-      //  token, 
+        token, 
        schema]);
 
     useEffect(() => {
@@ -177,7 +183,7 @@ function App() {
             {},
             {
               headers: {
-                // Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`,
                 "schema-name": schema,
               },
             }
@@ -197,6 +203,7 @@ function App() {
               schema_name: schema,
               call_session_id: sessionId,
             },
+            
           });
   
           const llmHelper = new LLMHelper({
@@ -466,7 +473,7 @@ function App() {
                               headers: {
                                 "Content-Type": "application/json",
                                 "schema-name": schema,
-                                // Authorization: `Bearer ${token}`,
+                                 Authorization: `Bearer ${token}`,
                               },
                             }
                           );
@@ -552,11 +559,11 @@ function App() {
     <VoiceClientProvider voiceClient={voiceClient}>
       <CharacterProvider>
         <TooltipProvider>
-          <main>
-            <div id="app">
+          
+            
               <AppContent />
-            </div>
-          </main>
+            
+          
           <aside id="tray" />
         </TooltipProvider>
       </CharacterProvider>
