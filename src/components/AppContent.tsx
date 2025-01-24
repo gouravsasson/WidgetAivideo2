@@ -109,11 +109,11 @@ export default function AppContent() {
           call_session_id: sessionId,
           transcription: "Sample transcription data",
           summary: "Sample session summary",
+          schema_name: schema,
         },
         {
           headers: {
-            Authorization: `Bearer ${access_token}`,
-            "schema-name": schema,
+            // Authorization: `Bearer ${access_token}`,
           },
         }
       );

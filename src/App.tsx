@@ -124,8 +124,8 @@ function App() {
           data,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
-              "schema-name": schema,
+              // Authorization: `Bearer ${token}`,
+              // "schema-name": schemaName,
             },
           }
         );
@@ -139,11 +139,11 @@ function App() {
       const checkAgentType = async () => {
         try {
           const response = await axios.get(
-            `${baseurl}/api/get-agent/${agent_id}/`,
+            `${baseurl}/api/get-agent/${agent_id}/?schema_name=${schema}`,
             {
               headers: {
-                 Authorization: `Bearer ${token}`,
-                "schema-name": schema,
+                // Authorization: `Bearer ${token}`,
+                // "schema-name": schemaName,
               },
             }
           );
@@ -180,11 +180,13 @@ function App() {
           setIsInitializing(true);
           const sessionResponse = await axios.post(
             `${baseurl}/api/callsession/create/${agent_id}/`,
-            {},
+            {
+              schema_name: schema,
+
+            },
             {
               headers: {
-                Authorization: `Bearer ${token}`,
-                "schema-name": schema,
+                // Authorization: `Bearer ${token}`,
               },
             }
           );
@@ -232,6 +234,8 @@ function App() {
                           email,
                           phone_number: phone,
                           agent: agent_id,
+                          schema_name: schema,
+
                         });
                       } else {
                         console.error("No active session to update.");
@@ -468,12 +472,12 @@ function App() {
                               contact_id: contact_id,
                               agent_id: agent_id,
                               appointment_book_ts: appointment_date,
+                              schema_name: schema,
                             },
                             {
                               headers: {
                                 "Content-Type": "application/json",
-                                "schema-name": schema,
-                                 Authorization: `Bearer ${token}`,
+                                // Authorization: `Bearer ${token}`,
                               },
                             }
                           );
