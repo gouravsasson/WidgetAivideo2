@@ -161,7 +161,7 @@ export default function AppContent() {
 
   return (
     <>
-      <div className=" p-10 bg-none w-fit">
+      <div className="  bg-none w-fit">
         <div>
           <Session
             state={transportState}
